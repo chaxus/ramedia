@@ -34,4 +34,5 @@ FLAGS=(
 )
 echo "${FLAGS[@]}"
 # emconfigure ./configure "${FLAGS[@]}"
-emconfigure ./configure  --target-os=none  --arch=x86_32  --enable-cross-compile    --disable-x86asm --disable-inline-asm  --disable-stripping  --extra-cflags=-s USE_PTHREADS  --extra-cxxflags=-s USE_PTHREADS  --extra-ldflags=-s USE_PTHREADS -s INITIAL_MEMORY=33554432 --nm=llvm-nm  --ar=emar  --ranlib=emranlib  --cc=emcc  --cxx=em++  --objcc=emcc  --dep-cc=emcc
+emconfigure ./configure --cc="emcc" --cxx="em++" --ar="emar" --ranlib=emranlib --prefix=$(pwd)/dist --enable-cross-compile --target-os=none --arch=x86_64 --cpu=generic --disable-ffplay --disable-ffprobe --disable-asm --disable-doc --disable-devices --disable-indevs --disable-outdevs --disable-network --disable-w32threads --disable-pthreads --enable-ffmpeg --enable-static --disable-shared --enable-decoder=pcm_mulaw --enable-decoder=pcm_alaw --enable-decoder=adpcm_ima_smjpeg --enable-decoder=aac --enable-decoder=hevc --enable-decoder=h264 --enable-protocol=file --disable-stripping
+
