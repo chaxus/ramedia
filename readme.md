@@ -48,6 +48,18 @@ emcc main.cpp
 
 
 
-# video
+# FFmpeg
 
-`ffmpeg` 地址：http://ffmpeg.org 
+官方地址：http://ffmpeg.org 
+
+原文链接：https://itnext.io/build-ffmpeg-webassembly-version-ffmpeg-js-part-1-preparation-ed12bf4c8fac
+
+为什么要构建 `FFmpeg` 呢？
+
+1. `FFmpeg` 是一个免费的开源项目，由一套庞大的软件库和程序组成，用于处理视频、音频、其他多媒体文件和流。
+
+2. 它非常有用，而且没有一个 `JavaScript` 库具有完全相同的功能。和它最像的是 [ffmpeg.js](https://github.com/Kagami/ffmpeg.js) 和 [videoconverter.js](https://github.com/bgrins/videoconverter.js)。但他们的 `FFmpeg` 和 `Emscripten` 都已经过时了，并且多年来没有维护了。（目前 `FFmpeg` 版本为 `6.0`, `Emscripten` 为 `3.1.42`）
+
+## 一.Docker 构建原生 FFmpeg
+
+构建和安装FFmpeg的说明可以在版本库根目录下的 `INSTALL.md` 中找到。
