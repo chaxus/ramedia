@@ -1,0 +1,14 @@
+# js
+node_modules
+dist
+vite.config.ts.timestamp*
+config.ts.timestamp*
+.temp
+.DS_Store
+.eslintcache
+package-lock.json
+pnpm-lock.yaml
+test.ts
+# c++
+*.dSYM
+*.out
