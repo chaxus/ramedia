@@ -1,5 +1,5 @@
 #!/bin/bash -x
 
-PATH=$PWD/emsdk/emsdk
+PATH=$PWD/ffmpeg
 
-sh $PATH/build.sh
+$PATH/build.sh
