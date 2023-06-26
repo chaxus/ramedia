@@ -28,9 +28,9 @@ FLAGS=(
     --disable-programs
     # disable doc
     --disable-doc
-    --extra-cflags="$CFLAGS"
-    --extra-cxxflags="$CFLAGS"
-    --extra-ldflags="$LDFLAGS"
+    # --extra-cflags="$CFLAGS"
+    # --extra-cxxflags="$CFLAGS"
+    # --extra-ldflags="$LDFLAGS"
     --nm="$EMSDK/upstream/bin/llvm-nm"
     --ar=emar
     --ranlib=emranlib
