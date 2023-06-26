@@ -8,7 +8,7 @@ emcc -v
 CFLAGS="-sUSE_PTHREADS"
 # CFLAGS="-s USE_PTHREADS -03"
 LDFLAGS="$CFLAGS-sINITIAL_MEMORY=33554432" # 33554432 bytes = 32 MB
-EMSDK=$(dirname $PWD)/emsdk
+EMSDK=$PWD/emsdk
 
 # configure FFMpeg with Emscripten
 FLAGS=(
@@ -34,15 +34,15 @@ FLAGS=(
     --nm="$EMSDK/upstream/bin/llvm-nm"
     --ar=emar
     --ranlib=emranlib
-    # --cc=emcc
-    # --cxx=em++
-    # --objcc=emcc
-    # --dep-cc=emcc
+    --cc=emcc
+    --cxx=em++
+    --objcc=emcc
+    --dep-cc=emcc
 )
 
 CONFIG_ARGS="${FLAGS[@]}"
 
-emconfigure ./configure $CONFIG_ARGS
+emconfigure $PWD/ffmpeg/configure $CONFIG_ARGS
 
 # build dependencies
 # make -j
