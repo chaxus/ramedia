@@ -5,7 +5,7 @@ emcc -v
 
 # configure FFMpeg with Emscripten
 # CFLAGS="-sPROXY_TO_PTHREAD"
-CFLAGS="-sUSE_PTHREADS"
+CFLAGS="-sUSE_PTHREADS-03"
 # CFLAGS="-s USE_PTHREADS -03"
 LDFLAGS="$CFLAGS-sINITIAL_MEMORY=33554432" # 33554432 bytes = 32 MB
 EMSDK=$(dirname $PWD)/emsdk
@@ -28,9 +28,9 @@ FLAGS=(
     --disable-programs
     # disable doc
     --disable-doc
-    # --extra-cflags="$CFLAGS"
-    # --extra-cxxflags="$CFLAGS"
-    # --extra-ldflags="$LDFLAGS"
+    --extra-cflags="$CFLAGS"
+    --extra-cxxflags="$CFLAGS"
+    --extra-ldflags="$LDFLAGS"
     --nm="$EMSDK/upstream/bin/llvm-nm"
     --ar=emar
     --ranlib=emranlib
