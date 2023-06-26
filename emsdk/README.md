@@ -50,13 +50,13 @@ important concepts to help understanding the internals of the SDK:
 Using the emsdk pre-compiled packages requires only the minimal set of
 dependenencies lists below.  When building from source a wider set of tools
 include git, cmake, and a host compiler are required. See:
-https://emscripten.org/docs/building_from_source/toolchain_what_is_needed.html.
+<https://emscripten.org/docs/building_from_source/toolchain_what_is_needed.html>.
 
 ### Mac OS X
 
-- For Intel-based Macs, macOS 10.13 or newer. For ARM64 M1 based Macs, macOS
+* For Intel-based Macs, macOS 10.13 or newer. For ARM64 M1 based Macs, macOS
   11.0 or newer.
-- `java`: For running closure compiler (optional).  After installing emscripten
+* `java`: For running closure compiler (optional).  After installing emscripten
   via emsdk, typing 'emcc --help' should pop up a OS X dialog "Java is not
   installed. To open java, you need a Java SE 6 runtime. Would you like to
   install one now?" that will automatically download a Java runtime to the
@@ -64,8 +64,8 @@ https://emscripten.org/docs/building_from_source/toolchain_what_is_needed.html.
 
 ### Linux
 
-- `python`: Version 2.7.0 or above.
-- `java`: For running closure compiler (optional)
+* `python`: Version 2.7.0 or above.
+* `java`: For running closure compiler (optional)
 
 The emsdk pre-compiled binaries are built aginst Ubuntu/Xenial 16.04 LTS and
 therefore depend on system libraries compatiable with versions of `glibc` and
@@ -74,7 +74,7 @@ you may not be able to use the pre-compiled binaries packages.
 
 ### Windows
 
-- `java`: For running closure compiler (optional)
+* `java`: For running closure compiler (optional)
 
 ## Uninstalling the Emscripten SDK
 
@@ -92,6 +92,7 @@ Run `emsdk help` or just `emsdk` to get information about all available commands
 
 To get a list of all currently installed tools and SDK versions, and all
 available tools, run `emsdk list`.
+
 * A line will be printed for each tool/SDK that is available for installation.
 * The text `INSTALLED` will be shown for each tool that has already been
   installed.
@@ -124,7 +125,7 @@ Emsdk contains a history of old compiler versions that you can use to maintain
 your migration path. Type `emsdk list --old` to get a list of archived tool and
 SDK versions, and `emsdk install <name_of_tool>` to install it.
 
-### I want to build from source!
+### I want to build from source
 
 Some Emsdk Tool and SDK targets refer to packages that are precompiled, and
 no compilation is needed when installing them. Other Emsdk Tools and SDK
@@ -149,7 +150,7 @@ If you only intend to contribute to Emscripten repository, and not to LLVM
 or Binaryen, you can also use precompiled versions of them, and only git
 clone the Emscripten repository. For more details, see
 
-https://emscripten.org/docs/contributing/developers_guide.html?highlight=developer#setting-up
+<https://emscripten.org/docs/contributing/developers_guide.html?highlight=developer#setting-up>
 
 ### When working on git branches compiled from source, how do I update to a newer compiler version?
 

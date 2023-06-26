@@ -4,8 +4,10 @@
 emcc -v
 
 # configure FFMpeg with Emscripten
-CFLAGS="-s USE_PTHREADS -03"
-LDFLAGS="$CFLAGS -s INITIAL_MEMORY=33554432" # 33554432 bytes = 32 MB
+# CFLAGS="-sPROXY_TO_PTHREAD"
+CFLAGS="-sUSE_PTHREADS"
+# CFLAGS="-s USE_PTHREADS -03"
+LDFLAGS="$CFLAGS-sINITIAL_MEMORY=33554432" # 33554432 bytes = 32 MB
 EMSDK=$(dirname $PWD)/emsdk
 
 # configure FFMpeg with Emscripten
@@ -22,6 +24,10 @@ FLAGS=(
     --disable-inline-asm
     # disable stripping
     --disable-stripping
+    # disable programs build (incl. ffplay, ffprobe & ffmpeg)
+    --disable-programs
+    # disable doc
+    --disable-doc
     --extra-cflags="$CFLAGS"
     --extra-cxxflags="$CFLAGS"
     --extra-ldflags="$LDFLAGS"
@@ -33,10 +39,35 @@ FLAGS=(
     --objcc=emcc
     --dep-cc=emcc
 )
-ARGS="${FLAGS[@]}"
 
-emconfigure ./configure $ARGS
+CONFIG_ARGS="${FLAGS[@]}"
 
-make -j
+emconfigure ./configure $CONFIG_ARGS
 
-make install
+# build dependencies
+# make -j
+emmake make -j
+
+# build ffmpeg.wasm
+mkdir -p wasm/dist
+
+# ARGS=(
+#     -I. -I./fftools
+#     -Llibavcodec -Llibavdevice -Llibavfilter -Llibavformat -Llibavresample -Llibavutil -Llibpostproc -Llibswscale -Llibswresample
+#     -Qunused-arguments
+#     -o wasm/dist/ffmpeg.js fftools/ffmpeg_opt.c fftools/ffmpeg_filter.c fftools/ffmpeg_hw.c fftools/cmdutils.c fftools/ffmpeg.c
+#     -lavdevice -lavfilter -lavformat -lavcodec -lswresample -lswscale -lavutil -lm
+#     # use SDL2
+#     -s USE_SDL=2
+#     # enable pthreads support
+#     -s USE_PTHREADS=1
+#     # 33554432 bytes = 32 MB
+#     -s INITIAL_MEMORY=33554432
+#     )
+
+# EMCC_CONFIG="${ARGS[@]}"
+
+# # make install
+# emcc $EMCC_CONFIG
+
+
