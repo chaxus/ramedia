@@ -5,7 +5,7 @@ emcc -v
 
 # configure FFMpeg with Emscripten
 # CFLAGS="-sPROXY_TO_PTHREAD"
-CFLAGS="-sUSE_PTHREADS-03"
+CFLAGS="-sUSE_PTHREADS"
 # CFLAGS="-s USE_PTHREADS -03"
 LDFLAGS="$CFLAGS-sINITIAL_MEMORY=33554432" # 33554432 bytes = 32 MB
 EMSDK=$(dirname $PWD)/emsdk
