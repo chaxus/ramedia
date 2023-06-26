@@ -60,6 +60,6 @@ emcc main.cpp
 
 2. 它非常有用，而且没有一个 `JavaScript` 库具有完全相同的功能。和它最像的是 [ffmpeg.js](https://github.com/Kagami/ffmpeg.js) 和 [videoconverter.js](https://github.com/bgrins/videoconverter.js)。但他们的 `FFmpeg` 和 `Emscripten` 都已经过时了，并且多年来没有维护了。（目前 `FFmpeg` 版本为 `6.0`, `Emscripten` 为 `3.1.42`）
 
-## 一.Docker 构建原生 FFmpeg
+## 一.构建原生 FFmpeg
 
 构建和安装FFmpeg的说明可以在版本库根目录下的 `INSTALL.md` 中找到。
