@@ -1,0 +1,1 @@
+g++ -I ../ffmlib/include ../test/ffmpeg_test.cpp -o ../test/ffmpeg_test -L ../ffmlib/lib/ -lavcodec -lavdevice -lavfilter -lavformat -lavutil
