@@ -1,0 +1,14 @@
+prefix=/Users/koolearn/Desktop/ramedia/ffmlib
+exec_prefix=${prefix}
+libdir=/Users/koolearn/Desktop/ramedia/ffmlib/lib
+includedir=/Users/koolearn/Desktop/ramedia/ffmlib/include
+
+Name: libavutil
+Description: FFmpeg utility library
+Version: 58.2.100
+Requires: 
+Requires.private: 
+Conflicts:
+Libs: -L${libdir}  -lavutil 
+Libs.private: -pthread -lm -framework VideoToolbox -L/usr/local/Cellar/libx11/1.8.4/lib -lX11 -framework CoreFoundation -framework CoreMedia -framework CoreVideo -framework CoreServices
+Cflags: -I${includedir}
