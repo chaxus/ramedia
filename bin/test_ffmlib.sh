@@ -1,1 +1,3 @@
-g++ -I ../ffmlib/include ../test/ffmpeg_test.cpp -o ../test/ffmpeg_test -L ../ffmlib/lib/ -lavcodec -lavdevice -lavfilter -lavformat -lavutil
+PATH=$PWD
+# echo $PATH
+clang++ -I $PWD/ffmlib/include $PWD/test/ffmpeg_test.cpp -o $PWD/test/ffmpeg_test -L $PWD/ffmlib/lib/ -lavcodec -lavdevice -lavfilter -lavformat -lavutil
