@@ -63,3 +63,11 @@ emcc main.cpp
 ## 一.构建原生 FFmpeg
 
 构建和安装FFmpeg的说明可以在版本库根目录下的 `INSTALL.md` 中找到。
+
+```sh
+#!/bin/bash -x
+# "nasm/yasm not found or too old. Use --disable-x86asm for a crippled build."
+./configure --prefix=$(dirname $PWD)/ffmlib --enable-static --enable-shared --disable-doc
+make -j
+make install
+```

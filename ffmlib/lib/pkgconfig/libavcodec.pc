@@ -1,0 +1,14 @@
+prefix=/Users/koolearn/Desktop/ramedia/ffmlib
+exec_prefix=${prefix}
+libdir=/Users/koolearn/Desktop/ramedia/ffmlib/lib
+includedir=/Users/koolearn/Desktop/ramedia/ffmlib/include
+
+Name: libavcodec
+Description: FFmpeg codec library
+Version: 60.3.100
+Requires: 
+Requires.private: libswresample >= 4.10.100, libavutil >= 58.2.100
+Conflicts:
+Libs: -L${libdir}  -lavcodec 
+Libs.private: -liconv -lm -llzma -framework AudioToolbox -pthread -lz -framework VideoToolbox -framework CoreFoundation -framework CoreMedia -framework CoreVideo -framework CoreServices
+Cflags: -I${includedir}
