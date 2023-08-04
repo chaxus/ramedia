@@ -19,7 +19,9 @@ int main(){
 }
 
 ```
+
 命令行执行：
+
 ```sh
 clang++ main.cpp 
 ./a.out 
@@ -27,7 +29,7 @@ clang++ main.cpp
 
 # WebAssembly
 
-官网：https://emscripten.org/
+官网：<https://emscripten.org/>
 
 Mac 安装 `Emscripten`
 
@@ -40,19 +42,20 @@ brew install emscripten
 ```sh
 emcc -v
 ```
+
 编译 `C++` 代码
+
 ```sh
 emcc main.cpp
 ```
+
 命令成功执行后，你会发现 `main.cpp` 同级目录下会生成两个文件：`a.out.wasm` 和 `a.out.js`。其中，`a.out.wasm` 就是我们想要的 `Wasm` 模块。
-
-
 
 # FFmpeg
 
-官方地址：http://ffmpeg.org 
+官方地址：<http://ffmpeg.org>
 
-原文链接：https://itnext.io/build-ffmpeg-webassembly-version-ffmpeg-js-part-1-preparation-ed12bf4c8fac
+原文链接：<https://itnext.io/build-ffmpeg-webassembly-version-ffmpeg-js-part-1-preparation-ed12bf4c8fac>
 
 为什么要构建 `FFmpeg` 呢？
 
@@ -67,7 +70,24 @@ emcc main.cpp
 ```sh
 #!/bin/bash -x
 # "nasm/yasm not found or too old. Use --disable-x86asm for a crippled build."
+# --enable-shared 开启动态库编译
+# --prefix=$(dirname $PWD)/ffmlib 指定输出的目录
+# make install 生成
+# --disable-optimizations 清除之前的编译污染
 ./configure --prefix=$(dirname $PWD)/ffmlib --enable-static --enable-shared --disable-doc
 make -j
 make install
+```
+
+开启调试模式
+
+```sh
+./configure –-enable-debug
+make -j
+```
+
+查看可调试的文件
+
+```sh
+ls *_g
 ```

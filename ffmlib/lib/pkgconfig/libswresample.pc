@@ -1,0 +1,14 @@
+prefix=/Users/koolearn/Desktop/ramedia/ffmlib
+exec_prefix=${prefix}
+libdir=/Users/koolearn/Desktop/ramedia/ffmlib/lib
+includedir=/Users/koolearn/Desktop/ramedia/ffmlib/include
+
+Name: libswresample
+Description: FFmpeg audio resampling library
+Version: 4.10.100
+Requires: 
+Requires.private: libavutil >= 58.2.100
+Conflicts:
+Libs: -L${libdir}  -lswresample 
+Libs.private: -lm
+Cflags: -I${includedir}
