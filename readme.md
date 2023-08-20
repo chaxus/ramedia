@@ -1,14 +1,16 @@
 # C++
 
 如果要为 macOS 进行 C++ 开发，建议安装 Clang 编译器。只需在“终端”窗口(Ctrl+Shift+ `)中运行以下命令即可安装命令行开发人员工具:
-
+```sh
 xcode-select --install
-
+```
 然后，要验证已安装 clang，请在“终端”窗口中运行以下命令。你应该会看到一条消息，其中包含有关所使用的 Clang 版本的信息。
-
+```sh
 clang --version
+```
 
 ```c++
+
 #include<iostream>
 
 using namespace std;
@@ -137,6 +139,150 @@ emcc -v main.cpp -o main.html -sEXPORTED_FUNCTIONS=_quick_sort,_main -sEXPORTED_
   </script>
 ```
 
+
+### Embind
+
+https://emscripten.org/docs/porting/connecting_cpp_and_javascript/embind.html?highlight=emscripten_bindings
+
+以下代码使用 EMSCRIPTEN_BINDINGS() 块将简单C++ lerp() function() 公开给 JavaScript。
+
+```cpp
+// quick_example.cpp
+#include <emscripten/bind.h>
+
+using namespace emscripten;
+
+float lerp(float a, float b, float t) {
+    return (1 - t) * a + t * b;
+}
+
+EMSCRIPTEN_BINDINGS(my_module) {
+    function("lerp", &lerp);
+}
+```
+为了使用 `embin` 编译上面的示例，我们使用 `bind` 选项调用 `emcc：`
+
+```sh
+emcc -lembind -o main.js main.cpp
+```
+生成的`main.js`文件可以作为节点模块或通过 `<script>` 标记加载：
+
+```html
+<!doctype html>
+<html>
+  <script>
+    var Module = {
+      onRuntimeInitialized: function() {
+        console.log('lerp result: ' + Module.lerp(1, 2, 0.5));
+      }
+    };
+  </script>
+  <script src="main.js"></script>
+</html>
+```
+
+绑定代码作为静态构造函数运行，并且仅当链接中包含对象文件时，静态构造函数才会运行，因此在为库文件生成绑定时，必须显式指示编译器包含对象文件。
+
+例如，要为一个假设的库生成绑定.a 编译 Emscripten 运行带有编译器标志的 --whole-archive emcc：
+
+```sh
+emcc -lembind -o library.js -Wl,--whole-archive library.a -Wl,--no-whole-archive
+```
+向 JavaScript 公开类需要更复杂的绑定语句。例如：
+
+```cpp
+class MyClass {
+
+public:
+  MyClass(int x, std::string y)
+    : x(x)
+    , y(y)
+  {}
+
+  void incrementX() {
+    ++x;
+  }
+
+  int getX() const { return x; }
+  void setX(int x_) { x = x_; }
+
+  static std::string getStringFromInstance(const MyClass& instance) {
+    return instance.y;
+  }
+
+private:
+  int x;
+  std::string y;
+};
+
+// Binding code
+EMSCRIPTEN_BINDINGS(my_class_example) {
+  class_<MyClass>("MyClass")
+    .constructor<int, std::string>()
+    .function("incrementX", &MyClass::incrementX)
+    .property("x", &MyClass::getX, &MyClass::setX)
+    .class_function("getStringFromInstance", &MyClass::getStringFromInstance)
+    ;
+}
+```
+
+绑定块定义了临时 class_ 对象上的成员函数调用链（在 Boost.Python 中使用了相同的样式）。这些函数注册类、其 constructor() 、 成员 function() 、 class_function() （静态）和 property() .
+
+然后可以在 JavaScript 中创建和使用 的 MyClass 实例，如下所示：
+
+```js
+var instance = new Module.MyClass(10, "hello");
+instance.incrementX();
+instance.x; // 11
+instance.x = 20; // 20
+Module.MyClass.getStringFromInstance(instance); // "hello"
+instance.delete();
+```
+为了防止闭包编译器重命名上述示例代码中的符号，需要按如下方式重写：
+
+```js
+var instance = new Module["MyClass"](10, "hello");
+instance["incrementX"]();
+instance["x"]; // 11
+instance["x"] = 20; // 20
+Module["MyClass"]["getStringFromInstance"](instance); // "hello"
+instance.delete();
+```
+请注意，只有优化程序看到的代码才需要这样做，例如，如 in --pre-js 或 上所述，或在 EM_ASM 或 EM_JS --post-js .对于未通过闭包编译器优化的其他代码，您无需进行此类更改。如果您在构建时没有 --closure 1 启用闭包编译器，则也不需要它。
+
+### clone
+
+在某些情况下，JavaScript 代码库的多个长期部分需要将同一C++对象保留不同的时间。
+
+为了适应该用例，Emscripten 提供了一种引用计数机制，在该机制中，可以为同一底层C++对象生成多个句柄。仅当删除所有句柄时，才会销毁对象。
+
+clone() JavaScript 方法返回一个新的句柄。它最终还必须与 delete() ：
+
+```js
+async function myLongRunningProcess(x, milliseconds) {
+    // sleep for the specified number of milliseconds
+    await new Promise(resolve => setTimeout(resolve, milliseconds));
+    x.method();
+    x.delete();
+}
+
+const y = new Module.MyClass;          // refCount = 1
+myLongRunningProcess(y.clone(), 5000); // refCount = 2
+myLongRunningProcess(y.clone(), 3000); // refCount = 3
+y.delete();                            // refCount = 2
+
+// (after 3000ms) refCount = 1
+// (after 5000ms) refCount = 0 -> object is deleted
+```
+
+基本类型的手动内存管理很繁重，因此 embind 提供了对值类型的支持。 Value arrays 与 JavaScript 数组相互转换，并 value objects 相互转换和从 JavaScript 对象转换。
+
+
+### 总结
+
+```sh
+emcc -lembind -o main.js main.cpp -sEXPORTED_FUNCTIONS=_quick_sort,_main -sEXPORTED_RUNTIME_METHODS=ccall,cwrap
+```
 
 # FFmpeg
 

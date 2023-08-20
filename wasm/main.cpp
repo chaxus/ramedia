@@ -1,5 +1,6 @@
 #include "quick_sort.cpp"
 #include "ccall.cpp"
+#include "embind.cpp"
 
 int main()
 {
@@ -10,4 +11,7 @@ int main()
     return 0;
 }
 
-
+EMSCRIPTEN_BINDINGS(my_class_example) {
+  emscripten::class_<QuickSort>("QuickSort")
+    .function("sortArray", &QuickSort::sortArray);
+}

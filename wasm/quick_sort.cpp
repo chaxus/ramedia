@@ -7,8 +7,7 @@
 
 using namespace std;
 
-class Solution
-{
+class QuickSort {
     int partition(vector<int> &nums, int l, int r)
     {
         int pivot = nums[r];

@@ -8,7 +8,7 @@
 #endif
 
 EXTERN EMSCRIPTEN_KEEPALIVE vector<int> quick_sort(vector<int> &nums) {
-  Solution vec;
+  QuickSort vec;
   vector<int> result = vec.sortArray(nums);
   printf("quick_sort exec");
   return result;
