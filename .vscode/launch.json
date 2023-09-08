@@ -5,11 +5,11 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(lldb) Launch",
+            "name": "ffmpeg -i",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/FFmpeg-n4.4.1/ffmpeg_g",
-            "args": ["-i", "input.mp4","output.mp4","-y"],
+            "args": ["-i", "${workspaceFolder}/assets/video/98E0DD32CBDCB63F.mp4","${workspaceFolder}/assets/video/A51760CB5FF392FF.mp4","-y"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/FFmpeg-n4.4.1",
             "environment": [],
