@@ -116,17 +116,28 @@ static void log_callback_report(void *ptr, int level, const char *fmt, va_list v
 
 void init_dynload(void)
 {
+// 预处理指令，只有当编译器定义了 HAVE_SETDLLDIRECTORY 并且平台是 Windows（_WIN32被定义）时，以下的代码才会被编译和执行。
 #if HAVE_SETDLLDIRECTORY && defined(_WIN32)
     /* Calling SetDllDirectory with the empty string (but not NULL) removes the
      * current working directory from the DLL search path as a security pre-caution. */
+    // 这是调用Windows API函数SetDllDirectory，它用于设置DLL搜索路径。
+    // 当传递一个空字符串（不是NULL）时，它会从搜索路径中移除当前工作目录，作为一种安全预防措施。
     SetDllDirectory("");
 #endif
 }
 
 static void (*program_exit)(int ret);
-
+/**
+ * @description: 
+ * @param {function} void (*cb)(int ret) 
+ * 参数是一个无返回值的函数，函数的名字的地址是cb，函数需要传入一个参数
+ * @return {*}
+ */
 void register_exit(void (*cb)(int ret))
 {
+    // 将这个函数保存到全局变量 program_exit 中
+    // 当程序退出时，会调用 exit_program 
+    // exit_program 函数中会调用注册的函数cb
     program_exit = cb;
 }
 

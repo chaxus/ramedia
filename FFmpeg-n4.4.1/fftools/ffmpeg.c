@@ -120,10 +120,11 @@ const char *const forced_keyframes_const_names[] = {
     NULL
 };
 
+// 性能测量的时间戳数据
 typedef struct BenchmarkTimeStamps {
-    int64_t real_usec;
-    int64_t user_usec;
-    int64_t sys_usec;
+    int64_t real_usec; // 实际的微秒数
+    int64_t user_usec; // 用户模式下的微秒数
+    int64_t sys_usec;  // 系统模式下的微秒数
 } BenchmarkTimeStamps;
 
 static void do_video_stats(OutputStream *ost, int frame_size);
@@ -511,16 +512,21 @@ static int decode_interrupt_cb(void *ctx)
 }
 
 const AVIOInterruptCB int_cb = { decode_interrupt_cb, NULL };
-
+/**
+ * @description: 清理系统内存资源，关闭文件
+ * @param {int} ret
+ * @return {*}
+ */
 static void ffmpeg_cleanup(int ret)
 {
     int i, j;
 
     if (do_benchmark) {
+        // 打印出当前进程的内存使用量
         int maxrss = getmaxrss() / 1024;
         av_log(NULL, AV_LOG_INFO, "bench: maxrss=%ikB\n", maxrss);
     }
-
+    // 资源清理代码
     for (i = 0; i < nb_filtergraphs; i++) {
         FilterGraph *fg = filtergraphs[i];
         avfilter_graph_free(&fg->graph);
@@ -545,13 +551,14 @@ static void ffmpeg_cleanup(int ret)
                 av_fifo_freep(&ist->sub2video.sub_queue);
             }
             av_buffer_unref(&ifilter->hw_frames_ctx);
+            // 释放动态分配的内存
             av_freep(&ifilter->name);
             av_freep(&fg->inputs[j]);
         }
         av_freep(&fg->inputs);
         for (j = 0; j < fg->nb_outputs; j++) {
             OutputFilter *ofilter = fg->outputs[j];
-
+            // 释放系统资源
             avfilter_inout_free(&ofilter->out_tmp);
             av_freep(&ofilter->name);
             av_freep(&ofilter->formats);
@@ -615,6 +622,7 @@ static void ffmpeg_cleanup(int ret)
                 av_fifo_generic_read(ost->muxing_queue, &pkt, sizeof(pkt), NULL);
                 av_packet_free(&pkt);
             }
+            // 释放系统资源
             av_fifo_freep(&ost->muxing_queue);
         }
 
@@ -4933,13 +4941,21 @@ static BenchmarkTimeStamps get_benchmark_time_stamps(void)
 #endif
     return time_stamps;
 }
-
+/**
+ * @description: 获取进程的内存使用情况
+ * @return {*}
+ */
 static int64_t getmaxrss(void)
 {
+    // 如果定义了HAVE_GETRUSAGE和HAVE_STRUCT_RUSAGE_RU_MAXRSS，
+    // 函数会使用Unix/Linux系统调用getrusage和结构体rusage的成员ru_maxrss来获取进程的最大内存使用。
+    // ru_maxrss以KB为单位，所以它被乘以1024转化为字节。
 #if HAVE_GETRUSAGE && HAVE_STRUCT_RUSAGE_RU_MAXRSS
     struct rusage rusage;
     getrusage(RUSAGE_SELF, &rusage);
     return (int64_t)rusage.ru_maxrss * 1024;
+// 定义了HAVE_GETPROCESSMEMORYINFO，函数会使用Windows API函数GetProcessMemoryInfo来获取进程的内存使用信息。
+// PeakPagefileUsage应该是返回的进程使用的最大内存量，单位也是KB，所以它也被乘以1024转化为字节。
 #elif HAVE_GETPROCESSMEMORYINFO
     HANDLE proc;
     PROCESS_MEMORY_COUNTERS memcounters;
@@ -4948,6 +4964,7 @@ static int64_t getmaxrss(void)
     GetProcessMemoryInfo(proc, &memcounters, sizeof(memcounters));
     return memcounters.PeakPagefileUsage;
 #else
+// 如果上述两个宏都没有定义，函数就返回0，表示无法获取内存使用信息。
     return 0;
 #endif
 }
@@ -4959,17 +4976,21 @@ static void log_callback_null(void *ptr, int level, const char *fmt, va_list vl)
 int main(int argc, char **argv)
 {
     int i, ret;
+    // 存储性能测量的时间戳数据 real_usec,user_usec,sys_usec 都是 int64_t
     BenchmarkTimeStamps ti;
-
+    // WIN32 平台的一种安全防御措施
     init_dynload();
-
+    // 注册系统资源清理和文件关闭函数，当程序退出时执行
     register_exit(ffmpeg_cleanup);
 
     setvbuf(stderr,NULL,_IONBF,0); /* win32 runtime needs this */
 
     av_log_set_flags(AV_LOG_SKIP_REPEATED);
     parse_loglevel(argc, argv, options);
-
+    // 检查命令行参数，如果第一个参数是"-d"，
+    // 则将run_as_daemon设置为1，
+    // 并设置日志回调函数为log_callback_null，
+    // 然后减少命令行参数的数量并跳过下一个参数。
     if(argc>1 && !strcmp(argv[1], "-d")){
         run_as_daemon=1;
         av_log_set_callback(log_callback_null);
