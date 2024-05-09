@@ -523,3 +523,7 @@ ls *_g
 - ' libavdevice '提供了一个抽象来访问捕获和回放设备。
 - ' libswresample '实现音频混合和重采样例程。
 - ' libswscale '实现颜色转换和缩放例程。
+
+### Visitors
+
+![](http://profile-counter.glitch.me/chaxus-ramedia/count.svg)
