@@ -3,7 +3,8 @@
         {
             "name": "Mac",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "/opt/homebrew/Cellar/emscripten/3.1.59/libexec/system/include"
             ],
             "defines": [],
             "macFrameworkPath": [
